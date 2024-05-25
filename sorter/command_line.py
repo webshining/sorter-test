@@ -6,12 +6,18 @@ from os.path import exists, isfile, join
 SORTER_DIR = os.path.dirname(os.path.abspath(__file__))
 CURRENT_DIR = os.getcwd()
 
+
 def get_path(*paths: str):
     return join(CURRENT_DIR, *paths)
 
-filegroups = dict(json.load(open(join(SORTER_DIR, 'filegroups.json')))).items()
 
 def sort():
+    filegroups = dict(json.load(open(join(SORTER_DIR, 'filegroups.json')))).items()
+    if exists(get_path("filegroups.json")):
+        try:
+            filegroups = dict(json.load(open(get_path("filegroups.json")))).items()
+        except:
+            pass
     for file in [f for f in os.listdir(get_path()) if isfile(get_path(f))]:
         for group, exts in filegroups:
             if file.split('.')[-1] in exts:
